@@ -143,6 +143,12 @@ diff 只说明“改了什么”，不稳定说明“为什么”。因此每次
 
 ---
 
+## 可选 Skill 包
+
+本仓库包含 `skills/readme-first-builder/`，用于在其他项目中初始化或升级 README First 完整架构。该 skill 只负责引导创建或合并 `AGENTS.md`、根 `README.md`、`.ai/changes/`、`.ai/decisions/` 与关键目录 README；初始化完成后，后续日常任务应直接遵循目标项目自己的 `AGENTS.md`。
+
+---
+
 ## 结论
 
 README First 的本质不是“多写 README”，而是建立一套适合 AI 协作开发的项目上下文协议。它把分散在开发者脑中、聊天记录、PR 讨论和历史 commit 中的隐性知识，沉淀为项目内部可读取、可执行、可维护的上下文系统。
