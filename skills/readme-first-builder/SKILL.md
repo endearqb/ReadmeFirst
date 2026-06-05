@@ -1,6 +1,6 @@
 ---
 name: readme-first-builder
-description: Initialize or upgrade a project to the full README First architecture from endearqb/ReadmeFirst. Use only when the user asks to initialize README First, install the README First framework, create the complete AGENTS.md + README.md + .ai/changes + .ai/decisions structure, or retrofit a repository with the README First architecture. After initialization, normal project work should follow the target project's AGENTS.md instead of this skill.
+description: Initialize or upgrade a project to the full README First architecture from endearqb/ReadmeFirst. Use only when the user asks to initialize README First, install the README First framework, create the complete AGENTS.md + README.md + .ai/architecture + .ai/changes + .ai/decisions structure, or retrofit a repository with the README First architecture. After initialization, normal project work should follow the target project's AGENTS.md instead of this skill.
 ---
 
 # README First Builder
@@ -15,6 +15,7 @@ Read `references/readmefirst-source.md` for the upstream repository and file rol
 
 - `README.md`: principle and architecture explanation.
 - `AGENTS.md`: executable agent protocol.
+- `.ai/architecture/README.md`: current architecture context entry.
 
 When network access is available, inspect the latest upstream files before initializing. If network is unavailable, explain that the initialization is based on the locally known structure and recommend a later sync.
 
@@ -24,10 +25,11 @@ When network access is available, inspect the latest upstream files before initi
 2. If `AGENTS.md` is missing, create it from the upstream ReadmeFirst `AGENTS.md` content, then adapt only project-specific placeholders if necessary.
 3. If `AGENTS.md` already exists, merge the README First protocol into it without overwriting local rules. Keep stricter or project-specific local rules.
 4. Ensure the root `README.md` acts as the project map: purpose, setup, commands, top-level directory responsibilities, and links to important directory READMEs.
-5. Create `.ai/changes/` and `.ai/decisions/` if missing. Add lightweight starter templates only when useful.
-6. Add or update directory-level `README.md` files only for key long-lived directories. Do not cover generated, dependency, cache, build, log, or temporary directories.
-7. Record the initialization in `.ai/changes/YYYY-MM-DD.md`.
-8. Verify paths and commands mentioned in the generated docs.
+5. Create `.ai/architecture/`, `.ai/changes/`, and `.ai/decisions/` if missing. Add lightweight starter templates only when useful.
+6. Ensure `.ai/architecture/README.md` explains the target project's current context map, document contracts, and architecture entry points without replacing code, tests, or local README files.
+7. Add or update directory-level `README.md` files only for key long-lived directories. Do not cover generated, dependency, cache, build, log, or temporary directories.
+8. Record the initialization in `.ai/changes/YYYY-MM-DD.md`.
+9. Verify paths and commands mentioned in the generated docs.
 
 ## Existing File Rules
 

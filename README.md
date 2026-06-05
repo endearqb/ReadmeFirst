@@ -2,7 +2,7 @@
 
 **面向所有 AI Agent 的项目上下文协作原则**
 
-本文件解释本项目为何采用 README First，以及它如何与 `AGENTS.md` 协同。`README First.md` 回答“为什么”，`AGENTS.md` 规定“怎么做”——任何 Agent 执行任务前应先读 `AGENTS.md` 中的可执行规则。
+本文件解释本项目为何采用 README First，以及它如何与 `AGENTS.md` 协同。本 `README.md` 回答“为什么”和“从哪里读起”，`AGENTS.md` 规定“怎么做”——任何 Agent 执行任务前应先读 `AGENTS.md` 中的可执行规则。
 
 ---
 
@@ -37,9 +37,10 @@ README First 把这些问题转化为工程制度：让每次工作都沿稳定�
 ```txt
 project/
 ├── AGENTS.md                 # AI 全局行为规则（Agent 每次执行前必读）
-├── README First.md           # 本文件：协作原则说明
-├── README.md                 # 项目总览与入口
+├── README.md                 # 项目总览、README First 原则与入口
 ├── .ai/
+│   ├── architecture/         # 当前稳定架构知识层
+│   │   └── README.md
 │   ├── changes/              # AI 变更记录
 │   │   └── YYYY-MM-DD.md
 │   └── decisions/            # 架构决策记录
@@ -57,6 +58,7 @@ project/
 - **`AGENTS.md`**：行为协议层。规定读取顺序、不确定性压缩、增删改查检查项、记录规则、禁止行为、验收标准。
 - **根 `README.md`**：项目地图层。项目是什么、技术栈、安装/启动/测试/构建、顶层目录职责、应从哪里读起。
 - **目录级 `README.md`**：局部上下文契约层。每个关键目录的职责、核心文件、维护约定、依赖边界、验证方式。
+- **`.ai/architecture/`**：当前架构知识层。记录上下文系统模块地图、跨目录依赖边界、文档契约、当前状态和长期维护入口。
 - **`.ai/changes/`**：修改记录层。补足 git diff 不表达的内容——为什么改、如何验证、对未来维护的影响。
 - **`.ai/decisions/`**：架构决策层。为什么选某方案、为什么废弃旧结构、哪些边界需长期遵守。
 
@@ -74,7 +76,7 @@ project/
 
 ### 3. 文档只记录长期知识
 
-README 记录：目录职责、模块边界、公共接口、文件组织方式、命名与依赖规则、测试与验证方式、未来维护者需知道的长期约定。README **不**记录：普通 bug 修复、临时调试信息、无长期价值的改动、可从 git diff 看出的细节、与目录职责无关的备忘。具体修改记入 `.ai/changes/`，架构决策记入 `.ai/decisions/`。
+README 记录：目录职责、模块边界、公共接口、文件组织方式、命名与依赖规则、测试与验证方式、未来维护者需知道的长期约定。`.ai/architecture/` 记录当前稳定架构状态和跨目录文档边界。README 和 `.ai/architecture/` **不**记录：普通 bug 修复、临时调试信息、无长期价值的改动、可从 git diff 看出的细节、与目录职责无关的备忘。具体修改记入 `.ai/changes/`，架构决策记入 `.ai/decisions/`。
 
 ### 4. 记录原因，而不仅是结果
 
@@ -95,7 +97,7 @@ diff 只说明“改了什么”，不稳定说明“为什么”。因此每次
 ```txt
 1. 识别任务类型，把 prompt 转换为任务契约
 2. 定位影响范围
-3. 阅读 AGENTS.md → 根 README.md → 目标路径上各级目录 README.md
+3. 阅读 AGENTS.md → 根 README.md → 必要时读取 .ai/architecture/ → 目标路径上各级目录 README.md
 4. 先消除偶然不确定性，再压缩本质不确定性（按风险等级处理）
 5. 检查 README 与实际代码是否一致
 6. 执行查询、新增、修改或删除（最小、保守、可回滚）
@@ -125,6 +127,7 @@ diff 只说明“改了什么”，不稳定说明“为什么”。因此每次
 
 - **与传统 README**：不否定，而是扩展——传统 README 服务人类理解项目，README First 同时服务人类与 AI 的上下文获取、行为约束与后续维护。
 - **与 ADR**：`.ai/decisions/` 类似轻量 ADR，更偏向 AI 协作语境，关注哪些决策会影响 Agent 后续操作、哪些边界需长期遵守。
+- **与当前架构文档**：`.ai/architecture/` 记录当前稳定状态，`.ai/decisions/` 记录历史决策原因；当前状态和历史原因分开维护。
 - **与 Git**：`.ai/changes/` 不替代 commit；diff 记录改了什么，`.ai/changes/` 记录原因、范围、验证和后续注意事项。
 - **与测试**：README First 解决“Agent 是否理解上下文”，测试解决“修改是否破坏行为”。README 告诉 Agent 该运行哪些测试，测试验证修改是否正确，`.ai/changes/` 记录验证结果。
 
@@ -136,8 +139,9 @@ diff 只说明“改了什么”，不稳定说明“为什么”。因此每次
 2. **建立全局规则**：创建或合并 `AGENTS.md`。
 3. **建立项目总览**：补全根 `README.md`，加入 README First 说明并指向关键目录 README。
 4. **建立目录级上下文**：按 P0（src/app/server/api/db/config/tests…）→ P1（hooks/utils/types/store/routes/scripts/docs）→ P2（examples/fixtures/mocks/tools）优先级补全目录 README。
-5. **建立记录机制**：创建 `.ai/changes/` 与 `.ai/decisions/`，写入模板并记录本次初始化。
-6. **验证与修正**：检查 README 是否引用不存在的文件、目录职责是否与代码一致、是否误覆盖已有 README，输出实施报告与风险清单。
+5. **建立架构知识层**：创建 `.ai/architecture/`，记录当前稳定上下文地图、文档契约、依赖边界和维护流程。
+6. **建立记录机制**：创建 `.ai/changes/` 与 `.ai/decisions/`，写入模板并记录本次初始化。
+7. **验证与修正**：检查 README 是否引用不存在的文件、目录职责是否与代码一致、是否误覆盖已有 README，输出实施报告与风险清单。
 
 > 已有 README 或 `AGENTS.md` 时，必须**合并补充，不得直接覆盖**；所有内容必须基于当前代码和目录结构，不得凭空编造。
 
@@ -145,7 +149,7 @@ diff 只说明“改了什么”，不稳定说明“为什么”。因此每次
 
 ## 可选 Skill 包
 
-本仓库包含 `skills/readme-first-builder/`，用于在其他项目中初始化或升级 README First 完整架构。该 skill 只负责引导创建或合并 `AGENTS.md`、根 `README.md`、`.ai/changes/`、`.ai/decisions/` 与关键目录 README；初始化完成后，后续日常任务应直接遵循目标项目自己的 `AGENTS.md`。
+本仓库包含 `skills/readme-first-builder/`，用于在其他项目中初始化或升级 README First 完整架构。该 skill 只负责引导创建或合并 `AGENTS.md`、根 `README.md`、`.ai/architecture/`、`.ai/changes/`、`.ai/decisions/` 与关键目录 README；初始化完成后，后续日常任务应直接遵循目标项目自己的 `AGENTS.md`。
 
 ---
 
