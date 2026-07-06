@@ -139,26 +139,26 @@ maintainer SKILL.md 相应改写:三个巡检项改为"先跑脚本取数据,再
 
 覆盖:R1、R3、R5、R6、R7、R8 的协议条款。
 
-- [ ] 1.1 修改 `AGENTS.md`:§2 路由表加 glossary、handoff 两行;§3.5 增补访谈模式;§3.6 加术语命名约束;§5.1 改验证证据字段(L1/L2 模板);§5.2 加时效戳与 glossary 写入触发;新增 §5.4 计划协议;§5 加 handoff 三条;§6 第 7 条强化;§7 同步。**验收**:全文 ≤ 300 行(`wc -l`);第 0 节 ≤ 45 行;L0/L1 必经要求与 v2 逐字比对无新增。
-- [ ] 1.2 修改根 `README.md`:系统组成树与职责表加入三个标准扩展(标注"按需启用");原则 5 提及验证证据;加版本说明段(VERSION 与版本印记机制)。**验收**:总长 ≤ 145 行;最小系统表述未变。
-- [ ] 1.3 更新 `skills/readme-first-builder/references/templates.md`:新增计划模板、glossary 表头模板、handoff 模板;changes 两级模板的验证字段改为证据格式;目录 README 模板头部加时效戳行。**验收**:模板与 1.1 中的协议措辞逐项对应。
-- [ ] 1.4 同步 `references/agents-md-template.md` 为 1.1 的最新全文(保留头部同步注释)。**验收**:`diff` 除注释外零差异。
+- [x] 1.1 修改 `AGENTS.md`:§2 路由表加 glossary、handoff 两行;§3.5 增补访谈模式;§3.6 加术语命名约束;§5.1 改验证证据字段(L1/L2 模板);§5.2 加时效戳与 glossary 写入触发;新增 §5.4 计划协议;§5 加 handoff 三条;§6 第 7 条强化;§7 同步。**验收**:全文 ≤ 300 行(`wc -l`);第 0 节 ≤ 45 行;L0/L1 必经要求与 v2 逐字比对无新增。
+- [x] 1.2 修改根 `README.md`:系统组成树与职责表加入三个标准扩展(标注"按需启用");原则 5 提及验证证据;加版本说明段(VERSION 与版本印记机制)。**验收**:总长 ≤ 145 行;最小系统表述未变。
+- [x] 1.3 更新 `skills/readme-first-builder/references/templates.md`:新增计划模板、glossary 表头模板、handoff 模板;changes 两级模板的验证字段改为证据格式;目录 README 模板头部加时效戳行。**验收**:模板与 1.1 中的协议措辞逐项对应。
+- [x] 1.4 同步 `references/agents-md-template.md` 为 1.1 的最新全文(保留头部同步注释)。**验收**:`diff` 除注释外零差异。
 
 ### Phase 2 —— 技能层(builder / maintainer / 脚本)
 
 覆盖:R2、R4、R9,及 R6 的技能侧。前置:Phase 1 完成。
 
-- [ ] 2.1 创建根 `VERSION`(`2.1.0`)与 `migrations/` 目录;编写 `migrations/v2.0-to-v2.1.md`(操作清单:逐节增补指令 + 占位文件创建 + 印记更新);将 UPGRADE-NOTES.md 改写并入 `migrations/v1-to-v2.0.md`。**验收**:一个只见过 v2.0 的 Agent 按迁移文件操作后,产物与 Phase 1 模板一致。
-- [ ] 2.2 修改 builder SKILL.md:新增升级模式(印记检测→比对→按序迁移);第 1 步选点改双因子并引用 dir-hotspots.sh;新增 glossary 可选步骤;初始化产物写入版本印记与时效戳。**验收**:SKILL.md ≤ 120 行;description 中补充升级触发语(upgrade README First / 升级框架版本)。
-- [ ] 2.3 编写三个脚本(check-paths.sh / check-freshness.sh / dir-hotspots.sh),各带 `--help`;在本仓库自测跑通。**验收**:对本仓库运行,check-paths 零误报;人为制造一个坏链接能被捕获。
-- [ ] 2.4 修改 maintainer SKILL.md:巡检 1a/1b/1c 改为脚本取数;新增版本差距报告、glossary 巡检、陈旧 handoff 检查、未归档 plans 检查。**验收**:SKILL.md ≤ 180 行;每个新巡检项都有明确的"发现→处理"路径。
+- [x] 2.1 创建根 `VERSION`(`2.1.0`)与 `migrations/` 目录;编写 `migrations/v2.0-to-v2.1.md`(操作清单:逐节增补指令 + 占位文件创建 + 印记更新);将 UPGRADE-NOTES.md 改写并入 `migrations/v1-to-v2.0.md`。**验收**:一个只见过 v2.0 的 Agent 按迁移文件操作后,产物与 Phase 1 模板一致。
+- [x] 2.2 修改 builder SKILL.md:新增升级模式(印记检测→比对→按序迁移);第 1 步选点改双因子并引用 dir-hotspots.sh;新增 glossary 可选步骤;初始化产物写入版本印记与时效戳。**验收**:SKILL.md ≤ 120 行;description 中补充升级触发语(upgrade README First / 升级框架版本)。
+- [x] 2.3 编写三个脚本(check-paths.sh / check-freshness.sh / dir-hotspots.sh),各带 `--help`;在本仓库自测跑通。**验收**:对本仓库运行,check-paths 零误报;人为制造一个坏链接能被捕获。
+- [x] 2.4 修改 maintainer SKILL.md:巡检 1a/1b/1c 改为脚本取数;新增版本差距报告、glossary 巡检、陈旧 handoff 检查、未归档 plans 检查。**验收**:SKILL.md ≤ 180 行;每个新巡检项都有明确的"发现→处理"路径。
 
 ### Phase 3 —— 仓库自身收尾
 
-- [ ] 3.1 同步 `.ai/architecture/`:documentation-contracts 加三个扩展组件与证据契约;builder-skill(或合并后的 skills 文档)更新两技能职责;context-map / dependency-boundaries 加新组件流向;current-state 更新 Landed 与 Gaps(移除"无自动化文档检查"缺口)。
-- [ ] 3.2 写入 `.ai/decisions/`:D1–D5(可合并为两三份决策文件:版本方案、扩展组件边界、脚本与访谈的归属)。
-- [ ] 3.3 在 `.ai/changes/` 记录本次升级(L2,验证证据字段按新格式示范)。
-- [ ] 3.4 全量自检:对本仓库运行三个脚本 + 交叉检查(版本号、模板、协议措辞在 README/AGENTS/两技能间一致);更新根 AGENTS.md 首行版本印记为 v2.1.0。**验收**:脚本零发现;`grep -rn "2\.1\.0"` 命中 VERSION、印记、migrations 三处且一致。
+- [x] 3.1 同步 `.ai/architecture/`:documentation-contracts 加三个扩展组件与证据契约;builder-skill(或合并后的 skills 文档)更新两技能职责;context-map / dependency-boundaries 加新组件流向;current-state 更新 Landed 与 Gaps(移除"无自动化文档检查"缺口)。
+- [x] 3.2 写入 `.ai/decisions/`:D1–D5(可合并为两三份决策文件:版本方案、扩展组件边界、脚本与访谈的归属)。
+- [x] 3.3 在 `.ai/changes/` 记录本次升级(L2,验证证据字段按新格式示范)。
+- [x] 3.4 全量自检:对本仓库运行三个脚本 + 交叉检查(版本号、模板、协议措辞在 README/AGENTS/两技能间一致);更新根 AGENTS.md 首行版本印记为 v2.1.0。**验收**:脚本零发现;`grep -rn "2\.1\.0"` 命中 VERSION、印记、migrations 三处且一致。
 
 ---
 

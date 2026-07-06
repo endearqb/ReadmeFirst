@@ -43,6 +43,7 @@ git log --since="90 days ago" --name-only --pretty=format: \
 
 # Complexity and recommendation per directory (only directories with files).
 find . -type d \
+  -not -path './.git' \
   -not -path './.git/*' \
   -not -path './node_modules/*' \
   -not -path './.cache/*' \
