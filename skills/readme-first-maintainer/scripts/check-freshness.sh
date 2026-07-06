@@ -60,4 +60,8 @@ find . -type f \( -name 'README.md' -not -path './README.md' -o -path './.ai/arc
   fi
 done
 
+if [ "$FOUND" -eq 0 ]; then
+  echo "check-freshness: clean"
+fi
+
 exit "$FOUND"

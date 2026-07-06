@@ -56,4 +56,8 @@ while IFS=: read -r file _ path; do
   fi
 done < "$REFS"
 
+if [ "$FOUND" -eq 0 ]; then
+  echo "check-paths: clean"
+fi
+
 exit "$FOUND"
