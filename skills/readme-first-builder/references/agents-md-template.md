@@ -1,3 +1,7 @@
+<!-- 本文件是 endearqb/ReadmeFirst 根 AGENTS.md 的同步副本,供 builder 离线初始化使用。
+     canonical 版本以仓库根 AGENTS.md 为准;两者是否同步由 readme-first-maintainer 巡检。
+     实例化到目标项目时请删除本注释。 -->
+
 <!-- README First protocol v2.1.0 -->
 
 # AGENTS.md

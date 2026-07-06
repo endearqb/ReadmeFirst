@@ -1,6 +1,7 @@
 # README First Context Map
+> 更新于:2026-07-06 · commit 332f388
 
-> Status: current architecture entry, 2026-06-05.
+> Status: current architecture entry, 2026-07-06.
 
 README First 是一套面向 AI 协作开发的项目上下文协议。它的核心不是增加文档数量，而是让每类文档承担稳定、可验证、可维护的职责。
 
@@ -12,9 +13,15 @@ README First 是一套面向 AI 协作开发的项目上下文协议。它的核
 | `README.md` | 项目地图和原则说明 | 系统组成、核心原则、落地路线、skill 入口 | 链接和路径检查 |
 | 目录级 `README.md` | 局部上下文契约 | 目录职责、核心文件、依赖边界、验证方式 | 与当前目录结构和代码事实比对 |
 | `.ai/architecture/` | 当前稳定架构知识层 | 模块地图、依赖边界、文档契约、当前状态 | `git diff --check` 与路径引用检查 |
-| `.ai/changes/` | 单次变更记录 | 变更原因、范围、假设、验证和后续注意事项 | 文件名日期、记录内容完整性 |
+| `.ai/changes/` | 单次变更记录;积累到一定阈值后由 maintainer 压缩归档 | 变更原因、范围、假设、验证和后续注意事项 | 文件名日期、记录内容完整性、分级标签 |
 | `.ai/decisions/` | 长期决策记录 | 背景、决策、影响和后续约束 | 与当前架构文件一致性检查 |
-| `skills/readme-first-builder/` | 可复用初始化/升级能力 | `SKILL.md`、canonical source reference、agent metadata | 与根协议和 README 同步检查 |
+| `skills/readme-first-builder/` | 可复用初始化/升级能力(v2.1 离线优先、P0 渐进覆盖) | `skills/readme-first-builder/SKILL.md`、references/ 模板、agent metadata | 与根协议和 README 同步检查 |
+| `skills/readme-first-maintainer/` | 可复用定期维护能力(巡检/压缩/沉淀/校准) | `skills/readme-first-maintainer/SKILL.md`、scripts/ | 与 changes 分布和架构同步检查 |
+| `VERSION` | 协议版本号 | 版本数值、迁移文件索引 | 与 canonical 版本一致 |
+| `migrations/` | 下游升级操作清单 | v1/v2 历史升级细节 | 协议 MINOR/PATCH 升级时 |
+| `.ai/glossary.md` | 共享术语表(按需启用) | 术语、定义、别名 | 术语与代码命名一致 |
+| `.ai/handoff.md` | 会话交接(按需启用) | 目标、状态、下一步、假设 | 跨会话任务连续性 |
+| `.ai/plans/` | L2 计划(按需启用) | checkbox 任务、验证命令 | 计划执行与归档 |
 
 ## Context Flow
 
@@ -28,9 +35,21 @@ flowchart TD
   Architecture --> Target
   Decisions[".ai/decisions"] --> Architecture
   Changes[".ai/changes"] --> Architecture
-  Skill["skills/readme-first-builder"] --> Agents
-  Skill --> RootReadme
-  Skill --> Architecture
+  Builder["skills/readme-first-builder"] --> Agents
+  Builder --> RootReadme
+  Builder --> Architecture
+  Builder --> Glossary[".ai/glossary.md"]
+  Builder --> Handoff[".ai/handoff.md"]
+  Builder --> Plans[".ai/plans/"]
+  Maintainer["skills/readme-first-maintainer"] --> Changes
+  Maintainer --> Architecture
+  Maintainer --> Decisions
+  Maintainer --> Glossary
+  Maintainer --> Handoff
+  Maintainer --> Plans
+  Handoff --> Agents
+  Glossary --> Agents
+  Plans --> Agents
 ```
 
 ## Boundary Notes
@@ -40,3 +59,5 @@ flowchart TD
 - 目录级 README 只描述对应目录的当前稳定契约；跨目录通用规则应上移到根 README 或 `.ai/architecture`。
 - `.ai/changes/` 记录“这次为什么改”；`.ai/architecture/` 记录“现在系统是什么样”；`.ai/decisions/` 记录“为什么长期选择这样”。
 - readme-first-builder skill 是对外复制协议的工具，必须跟随 canonical source 更新，但不应替代目标项目自己的 `AGENTS.md`。
+- readme-first-maintainer skill 承接日常任务卸下的系统性维护负担，不替代普通任务执行，也不替代目标项目自己的 `AGENTS.md`。
+- `.ai/glossary.md`、`.ai/handoff.md`、`.ai/plans/` 是触发式标准扩展，不命中条件时为空或不存在，不影响最小系统。
