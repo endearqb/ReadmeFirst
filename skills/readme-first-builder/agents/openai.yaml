@@ -1,4 +1,4 @@
 interface:
-  display_name: "Readme First Builder"
-  short_description: "Create and maintain README-first project docs"
-  default_prompt: "Audit the project structure and build or update README-first documentation, indexes, contribution notes, and usage paths."
+  display_name: "README First Builder"
+  short_description: "Initialize or upgrade README First v2.2 with risk profiles"
+  default_prompt: "Inspect the project, merge README First v2.2 without overwriting local rules, build the minimal context structure, identify risk-domain profile candidates from repository evidence, and validate all generated references."

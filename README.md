@@ -1,145 +1,258 @@
 # README First
 
-**面向所有 AI Agent 的项目上下文协作原则(v2.1 · 分级执行版)**
+**面向所有 AI Agent 的项目上下文与风险能力路由协议（v2.2 · 风险 Profile 版）**
 
-本文件回答"为什么"和"从哪里读起";`AGENTS.md` 规定"怎么做"。任何 Agent 执行任务前,只需读 `AGENTS.md` 第 0 节的最小闭环即可开始工作,其余章节按需查阅。
+本文件回答“为什么”和“从哪里读起”；`AGENTS.md` 规定“怎么做”。任何 Agent 开始任务时，只需先读 `AGENTS.md` 第 0 节最小闭环，其余内容按任务级别和风险领域渐进加载。
 
 ---
 
 ## 一句话定义
 
-> 先读上下文,再执行操作;先收敛不确定性,再修改文件;协议重量与任务风险成正比。
+> 先读上下文，再执行操作；先收敛不确定性，再修改文件；流程重量随任务影响缩放，专业能力随风险领域加载。
 
-README First 适用于本项目中协作的所有 AI Agent(Claude Code、Cursor、Codex、Copilot、Devin 及任何能读写仓库的自动化工具),不绑定任何特定厂商。
+README First 适用于 Claude Code、Cursor、Codex、Copilot、Devin 以及任何能读写仓库的自动化工具，不绑定特定厂商。
 
-**v2 相对 v1 的核心变化只有一个:把"每次任务执行完整协议"改为"按风险分级执行"(L0/L1/L2),并把因此从日常任务中剥离的系统性维护工作——文档漂移巡检、变更记录压缩、长期知识沉淀——交给一个独立的维护技能定期完成。** 最小不确定性的原则没有变,变的是达成它的成本分布:低风险任务的不确定性本来就低,不需要支付高风险任务的流程成本。
+v2.2 在 v2.1 的 L0/L1/L2 分级执行之上增加第二个独立维度：
+
+- **任务级别**决定读取范围、任务契约、记录深度和最终报告；
+- **风险领域**决定需要加载哪个项目 Profile、专业 Skill、检查清单和验证证据。
+
+它避免两个常见极端：低风险任务被繁重协议拖慢，以及“只改一个文件”的高风险修改绕过数据库、并发、网络或安全门禁。
 
 ---
 
 ## 为什么需要它
 
-当 AI Agent 进入真实工程流程,瓶颈已从"代码生成能力"转向"上下文治理能力"。缺少上下文时,语法正确的代码也可能破坏项目质量:Agent 不知道目录为何存在、隐性知识藏在开发者脑中、重复造轮子、局部修改破坏整体、文档漂移放大错误、多会话之间没有共同记忆、变更只留 diff 不留原因。
+当 AI Agent 进入真实工程流程，瓶颈已经从“能不能生成代码”转向三件事：
 
-README First 把这些问题转化为工程制度:让每次工作沿稳定的上下文路径理解项目,并把新的长期知识沉淀回项目。
+1. **是否理解项目**：目录为什么存在，边界在哪里，哪些规则只存在于历史记录和维护者经验中；
+2. **是否识别失败机制**：事务、并发、缓存、权限、迁移和外部副作用不会因为代码能编译就自动正确；
+3. **是否留下可复核证据**：测试、查询计划、并发复现、迁移演练和安全负面用例必须与风险一一对应。
+
+README First 把这些问题转化为工程制度：让每次工作沿稳定路径获取上下文，让高风险任务加载匹配的专业能力，并把新的长期知识沉淀回项目。
 
 ---
 
 ## 系统组成
 
-推荐的最小系统:
+### 目标项目的最小系统
 
-```txt
+```text
 project/
-├── AGENTS.md                 # 分级执行协议(第 0 节为每次必读的最小闭环)
-├── README.md                 # 项目地图:是什么、怎么跑、从哪读起
-├── VERSION                   # README First 协议版本(按需同步)
+├── AGENTS.md                 # 分级执行 + 风险领域路由
+├── README.md                 # 项目地图：是什么、怎么跑、从哪读起
+├── VERSION                   # README First 协议版本（按需同步）
 ├── .ai/
-│   ├── architecture/         # 当前稳定架构知识层(从单个 README.md 起步)
-│   ├── changes/              # 分级变更记录(L0 不记,L1 短记,L2 全记)
+│   ├── architecture/         # 当前稳定架构知识层
+│   ├── changes/              # L1/L2 变更原因、风险和验证证据
 │   │   └── YYYY-MM-DD.md
 │   ├── decisions/            # 长期架构决策
-│   │   └── 0001-example.md
-│   ├── glossary.md           # 术语表(按需启用)
-│   ├── handoff.md            # 会话交接(按需启用)
-│   └── plans/                # 复杂任务计划(按需启用)
-│       └── done/
+│   ├── glossary.md           # 术语表（按需启用）
+│   ├── handoff.md            # 会话交接（按需启用）
+│   ├── plans/                # 复杂任务计划（按需启用）
+│   │   └── done/
+│   └── profiles/             # 项目本地风险 Profile（按需启用）
+├── skills/                   # Profile 指向的专业 Skill（按需启用）
 └── src/
-    └── README.md             # 仅为关键目录建立(P0 优先,渐进覆盖)
+    └── README.md             # 只为关键目录建立，P0 优先
 ```
 
-各层职责:
+### Canonical ReadmeFirst 仓库的能力包
+
+```text
+ReadmeFirst/
+├── extensions/
+│   ├── README.md             # 能力包契约和安装规则
+│   ├── profile-template.md   # Profile 模板
+│   └── <capability-pack>/
+│       ├── PROFILE.md
+│       ├── README.md
+│       └── skill/<skill-name>/
+└── skills/
+    ├── readme-first-builder/
+    └── readme-first-maintainer/
+```
+
+各层职责：
 
 | 层 | 职责 |
 |---|---|
-| `AGENTS.md` | 行为协议层:任务分级、读取规则、不确定性协议、记录规则、禁止行为 |
-| 根 `README.md` | 项目地图层:项目是什么、技术栈、安装/测试/构建、顶层目录职责 |
-| 目录级 `README.md` | 局部契约层:目录职责、核心文件、依赖边界、验证方式 |
-| `.ai/architecture/` | 当前架构层:跨目录边界、文档契约、当前状态(只记当前事实) |
-| `.ai/changes/` | 修改记录层:为什么改、基于什么假设、如何验证 |
-| `.ai/decisions/` | 决策层:为什么长期这样选、哪些边界需长期遵守 |
-| `.ai/glossary.md` | 术语层(按需启用):共享语言、别名与易混淆项 |
-| `.ai/handoff.md` | 会话交接层(按需启用):跨会话任务连续性 |
-| `.ai/plans/` | 计划层(按需启用):L2 多阶段任务的零上下文执行计划 |
+| `AGENTS.md` | 行为协议：任务分级、风险路由、读取规则、不确定性协议、记录规则 |
+| 根 `README.md` | 项目地图：项目是什么、技术栈、安装/测试/构建、顶层目录职责 |
+| 目录 README | 局部契约：目录职责、核心文件、依赖边界、验证方式 |
+| `.ai/architecture/` | 当前稳定架构、跨目录边界、Profile 与 Skill 架构 |
+| `.ai/profiles/` | 项目本地风险路由、触发条件、业务不变量、阻断条件、最低证据 |
+| 项目 `skills/` | 可复用专业工作流、references、scripts 和示例 |
+| `.ai/changes/` | 为什么改、风险是什么、基于什么假设、如何验证 |
+| `.ai/decisions/` | 为什么长期这样选 |
+| canonical `extensions/` | 可选能力包的发布与分发，不自动进入下游最小系统 |
 
-成熟项目可扩展 .ai/plans/、.ai/prompts/、.ai/reviews/。`.ai/changes/` 中被压缩归档的记录进入 `.ai/changes/archive/`。
+---
+
+## 两个独立维度
+
+### 任务级别：流程重量
+
+```text
+L0 轻量 → 几乎无感
+L1 标准 → 局部上下文 + 短记录
+L2 高影响 → 完整契约 + 风险证据 + 长期文档核对
+```
+
+### 风险领域：专业能力
+
+标准领域包括：
+
+```text
+database
+transaction
+concurrency
+http-network
+cache-overload
+runtime-resources
+authentication-authorization
+security-privacy
+migration-release
+external-side-effects
+```
+
+一项任务可以是“L1 + database”，也可以是“L2 + transaction + concurrency + external-side-effects”。风险领域不是严重级别，而是失败机制和能力路由标签。
 
 ---
 
 ## 核心设计原则
 
-### 1. 先读后改,够用即停
+### 1. 先读后改，够用即停
 
-执行任何操作前,先按 `AGENTS.md` 第 2 节的路由读取相关上下文。但阅读有停止条件:当影响本次任务的偶然不确定性已被消除,就停止扩大阅读。README First 要求的是"读到够用",不是"读完全部"。
+读取有明确停止条件：影响本次任务的偶然不确定性已经消除，并取得风险领域要求的最低证据后停止。README First 要求“读到够用”，不是“读完全部”。
 
-### 2. 协议重量与风险成正比
+### 2. 协议重量与任务影响成正比
 
-改错别字和改公共 API 不应支付同样的流程成本。任务分为 L0(轻量)、L1(标准)、L2(高影响)三级,读取范围、任务契约、记录深度、输出要求全部随级别缩放。定级拿不准就升级,执行中命中高影响特征就升级——分级本身就是一次风险评估,它保证协议的注意力集中在不确定性真正危险的地方。
+错别字和公共 API 不应支付相同流程成本。L0/L1/L2 只管理上下文、记录和报告重量，不负责替代专业判断。
 
-### 3. 局部契约优先
+### 3. 任务级别与风险领域分离
 
-规则有层级:`AGENTS.md`(全局)→ 根 README → 上级目录 README → 当前目录 README → 代码与测试(事实来源)。冲突时以更靠近目标文件的 README 为准;README 与代码冲突时必须显式指出,不得静默选边。
+“改动小”不等于“风险低”。一个单文件事务修复可能是 L2；一个普通 Node 查询接口可能是 L1，但仍需数据库、权限和资源边界检查。
 
-### 4. 文档只记录长期知识
+### 4. Profile 路由，Skill 执行
 
-README 与 `.ai/architecture/` 只记录职责、边界、接口、约定和验证方式,不记录流水账、临时调试和可从 diff 看出的细节。判断标准:六个月后的维护者是否需要知道?
+Profile 是项目本地契约，说明何时触发、读什么、守住哪些不变量、需要什么证据；Skill 是可复用专业工作流。Profile 优先于通用 Skill，二者都不能覆盖更具体的项目事实。
 
-### 5. 记录原因,而不仅是结果
+### 5. 渐进披露，不把知识库塞进每次上下文
 
-diff 只说明"改了什么"。变更记录按级别缩放:L0 靠 commit message,L1 记五个字段,L2 记完整契约——原因、假设、影响范围、验证证据,让后续 Agent 理解修改意图并复核。
+Agent 先读短 Profile，再按当前任务加载 Skill 主文件和必要 references。培训手册、模式库和扫描脚本只在需要时读取或运行。
 
-### 6. 平时轻记录,定期重整理
+### 6. 证据与风险对应
 
-日常任务只做追加式的轻量记录,不承担系统性维护。文档漂移巡检、记录压缩归档、重复经验沉淀为长期知识、协议阈值校准,由 `readme-first-maintainer` 技能定期批量完成。这类似记忆的巩固:工作时快速留痕,休整时整理归档。
+数据库性能结论需要查询计划或指标；并发正确性需要并发测试或原子约束；安全结论需要负面权限用例和数据流证据；迁移需要兼容、停止、恢复和验证方案。
+
+### 7. 扫描器只能发现候选
+
+关键词和静态扫描命中不是已确认缺陷；扫描无命中也不是安全证明。Agent 必须回到调用链、配置、数据流、权限边界和运行证据。
+
+### 8. 平时轻记录，定期重整理
+
+日常任务追加轻量记录；Maintainer 定期做漂移巡检、changes 压缩、知识沉淀、协议校准，以及 Profile/Skill/证据治理。
 
 ---
 
 ## 标准执行流程
 
-```txt
-定级(L0 / L1 / L2)→ 按级读取与执行 → 按级记录与报告
+```text
+定级 L0/L1/L2
+  → 读取项目上下文
+  → 识别风险领域
+  → 加载已安装 Profile / Skill
+  → 建立任务契约、业务不变量与证据计划
+  → 实现或审查
+  → 运行验证
+  → 写入 changes / README / architecture / decisions
 ```
 
-细则见 `AGENTS.md`。日常任务的完整心智负担应控制在:L0 几乎无感,L1 一次短记录,L2 才展开完整协议。
+低风险任务不会因为 v2.2 变重；只有命中专业风险且项目安装了相应 Profile 时，才加载额外能力。
 
 ---
 
-## 生命周期与两个技能
+## 生命周期与能力包
 
-README First 的生命周期分三段,对应两个技能加一份协议:
+1. **初始化或升级 — `skills/readme-first-builder/`**
+   建立或合并 `AGENTS.md`、根 README、`.ai/` 最小结构和 P0 目录 README；扫描技术栈事实并给出能力包候选。默认不静默安装大型能力包。
 
-1. **初始化 —— `skills/readme-first-builder/`**:在新项目或存量项目中建立(或合并)`AGENTS.md`、根 README、`.ai/` 结构和 P0 关键目录 README。一次性使用,初始化完成后交还项目自己的 `AGENTS.md`。
-2. **日常执行 —— 目标项目的 `AGENTS.md`**:所有常规任务按分级协议执行,不再触发任何技能。
-3. **定期维护 —— `skills/readme-first-maintainer/`**:每 2–4 周、或变更记录累积到阈值、或大重构后运行。负责健康巡检(漂移、失效引用、覆盖缺口)、记忆压缩(归档旧 changes)、知识沉淀(重复经验写入长期文档)、协议校准(分级阈值是否符合项目实际)。
+2. **日常执行 — 目标项目的 `AGENTS.md` + `.ai/profiles/`**
+   常规任务按 L0/L1/L2 执行；命中风险领域时加载本地 Profile 和对应 Skill。
+
+3. **定期维护 — `skills/readme-first-maintainer/`**
+   每 2–4 周、changes 累积到阈值或大重构后运行，负责文档健康、记忆压缩、知识沉淀、协议校准和 Profile/Skill 证据治理。
+
+4. **可选能力包 — canonical `extensions/`**
+   能力包独立版本化、按需安装。首个参考能力包是 `extensions/fullstack-foundations/`，覆盖 Node.js、PostgreSQL、事务并发、HTTP、缓存、安全和迁移。
+
+---
+
+## 首个参考能力包：Full-stack Foundations
+
+`extensions/fullstack-foundations/` 包含：
+
+- `PROFILE.md`：风险领域、触发条件、必读上下文、业务不变量、阻断条件和证据矩阵；
+- `fullstack-foundations-guard` Skill：Review、Implementation、Design、Mentor 四种模式；
+- 全栈培训手册：数据库、事务、并发、网络、安全、运行时和可观测性；
+- 正反模式库、审查清单、输出契约和候选风险扫描器。
+
+它不是 ReadmeFirst Core 的强制依赖，也不会默认装入所有项目。
 
 ---
 
 ## 版本与升级
 
-本仓库协议版本见根 `VERSION`。下游项目的 `AGENTS.md` 首行以 `<!-- README First protocol vX.Y.Z -->` 印记当前版本;`skills/readme-first-builder/` 支持检测印记并按序应用 `migrations/` 中的升级清单,不覆盖本地规则。
+本仓库协议版本见根 `VERSION`。下游项目 `AGENTS.md` 首行使用：
+
+```text
+<!-- README First protocol vX.Y.Z -->
+```
+
+Builder 按 `migrations/` 顺序升级并保留本地更严格规则。v2.1 → v2.2 的升级见 `migrations/v2.1-to-v2.2.md`。
 
 ---
 
-## 好 README 的标准
+## 验证
 
-准确(基于当前代码)、简短(50–150 行,只记长期有用信息)、可操作(能指导正确的增删改查)、有边界(负责什么、不负责什么)、有入口(核心文件与对外接口)、有验证(修改后运行什么)。
+仓库提供无第三方依赖的验证入口：
 
-应避免:内容空泛、与代码不一致、流水账、百科全书式逐文件解释、缺依赖边界、缺验证方式、堆砌不可执行的口号。
+```bash
+bash tests/test-maintainer-scripts.sh
+python3 tests/validate_repository.py
+python3 -m py_compile \
+  extensions/fullstack-foundations/skill/fullstack-foundations-guard/scripts/risk_scan.py
+```
 
-不为 node_modules/、dist/、build/、coverage/、.cache/、tmp/、logs/ 等构建产物或缓存目录创建 README。只给真正承担长期职责的目录建立上下文契约,且优先覆盖高频修改的核心目录,其余渐进补齐。
+GitHub Actions 会运行相同的基础检查。
+
+---
+
+## 好 README、Profile 与 Skill 的标准
+
+- **README**：准确、短、可操作、有边界、有入口、有验证；
+- **Profile**：触发条件明确、风险领域有限、项目本地化、证据可验证；
+- **Skill**：主文件精炼，详细材料渐进加载，扫描结果不冒充结论；
+- **长期文档**：只记录六个月后仍有价值的职责、边界、规则和决策。
+
+不为 `node_modules/`、`dist/`、`build/`、`coverage/`、缓存、日志或临时目录创建 README。
 
 ---
 
 ## 与现有实践的关系
 
-- **与传统 README**:扩展而非否定——同时服务人类与 AI 的上下文获取、行为约束与维护。
-- **与 ADR**:`.ai/decisions/` 是轻量 ADR,更关注哪些决策影响 Agent 后续操作。
-- **与 Git**:`.ai/changes/` 不替代 commit;diff 记录改了什么,changes 记录原因、假设与验证。
-- **与测试**:README First 解决"Agent 是否理解上下文",测试解决"修改是否破坏行为"。
+- **传统 README**：扩展而非否定，同时服务人类和 Agent；
+- **ADR**：`.ai/decisions/` 保留长期选择及其原因；
+- **Git**：diff 记录“改了什么”，changes 记录“为什么、风险和证据”；
+- **测试**：README First 管理理解和路由，测试验证行为；
+- **安全/性能扫描**：作为证据来源之一，不能替代工程判断；
+- **专业 Skill**：提供深度能力，但由项目 Profile 决定何时加载。
 
 ---
 
 ## 结论
 
-README First 的本质不是"多写 README",而是建立一套适合 AI 协作开发的项目上下文协议——并让协议本身保持可负担:重量随风险缩放,维护定期批量完成。
+README First 的本质不是“多写 README”，而是建立一套可负担、可验证、可扩展的 AI 工程协作协议：
 
-> 让 AI 先理解项目,再改变项目;让每一次改变,都反过来增强项目的可理解性;让协议本身,不成为新的负担。
+> 让 AI 先理解项目，再改变项目；让高风险任务调用匹配的专业能力；让每一次改变都留下可复核证据，并反过来增强项目的可理解性。

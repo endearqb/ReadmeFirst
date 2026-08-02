@@ -1,76 +1,62 @@
 # README First Dependency Boundaries
-> 更新于:2026-07-06 · commit 332f388
 
-> Status: stable boundary set, 2026-07-06.
-
-本文档定义 README First 文档之间的读取顺序、优先级和不可替代关系。
+> 更新于:2026-08-02
 
 ## Intended Reading Direction
 
 ```mermaid
 flowchart TD
-  Agents["AGENTS.md"]
-  Root["README.md"]
-  Architecture[".ai/architecture"]
-  ParentReadme["Parent directory README.md"]
-  LocalReadme["Nearest directory README.md"]
-  Target["Target files, tests, config"]
-  Changes[".ai/changes"]
-  Decisions[".ai/decisions"]
-  Glossary[".ai/glossary.md"]
-  Handoff[".ai/handoff.md"]
-  Plans[".ai/plans"]
-  Maintainer["skills/readme-first-maintainer"]
-
-  Agents --> Root
-  Root --> Architecture
-  Root --> ParentReadme
-  Root --> Glossary
-  Handoff --> Agents
-  ParentReadme --> LocalReadme
-  LocalReadme --> Target
-  Architecture --> Target
-  Changes --> Architecture
-  Decisions --> Architecture
-  Glossary --> Target
-  Plans --> Target
-  Maintainer --> Changes
-  Maintainer --> Architecture
-  Maintainer --> Decisions
-  Maintainer --> Glossary
-  Maintainer --> Handoff
-  Maintainer --> Plans
+  Agents["AGENTS.md"] --> Root["Root README"]
+  Root --> Architecture[".ai/architecture"]
+  Root --> Parent["Parent directory README"]
+  Parent --> Local["Nearest directory README"]
+  Local --> Facts["Code / tests / schema / config"]
+  Architecture --> Facts
+  Facts --> Domains["Risk domains"]
+  Domains --> Profiles[".ai/profiles"]
+  Profiles --> Skills["Installed skills"]
+  Skills --> References["Needed references / scripts"]
+  Decisions[".ai/decisions"] --> Architecture
+  Changes[".ai/changes"] --> Architecture
+  Handoff[".ai/handoff"] --> Agents
+  Glossary[".ai/glossary"] --> Facts
+  Plans[".ai/plans"] --> Facts
+  Extensions["canonical extensions"] --> Profiles
+  Extensions --> Skills
 ```
 
 ## Priority Rules
 
-| 规则 | 原因 |
+| 优先级 | 原因 |
 |---|---|
-| `AGENTS.md` 的全局行为规则优先级最高 | 保证所有 Agent 先遵守同一执行协议 |
-| 最近的目录 README 优先于上级目录 README | 局部目录契约更接近目标文件 |
-| `.ai/architecture/` 解释跨目录长期架构 | 避免把跨目录规则散落到多个局部 README |
-| `.ai/decisions/` 解释历史原因，不直接覆盖当前文件事实 | 决策可能过时，当前事实应以 README、代码和测试为准 |
-| `.ai/changes/` 解释单次变更，不作为稳定 API 文档;积累后由 maintainer 压缩归档 | 变更记录是历史线索，不是当前契约 |
-| `.ai/glossary.md` 解释共享术语;会话内首次接触项目时与根 README 一并读 | 避免同一概念在不同文档中被重复解释 |
-| `.ai/handoff.md` 解释跨会话的未完成状态;存在时必读 | 保证任务连续性，不丢失上下文 |
-| `.ai/plans/` 解释 L2 多阶段计划;执行前必读 | 复杂任务需要零上下文可执行的计划 |
-| `skills/readme-first-maintainer/` 解释文档系统的定期维护 | 系统性巡检、压缩、沉淀不应由日常任务承担 |
+| 用户明确指令 | 当前任务目标的最高来源，但不能要求伪造事实或证据 |
+| 项目 `AGENTS.md` | 全局执行和风险路由协议 |
+| 最近目录 README | 最接近目标文件的局部契约 |
+| 上级目录 README | 提供更宽模块边界 |
+| 项目本地 `.ai/profiles/` | 对通用风险能力进行项目特化 |
+| 已安装通用 Skill | 提供专业工作流，不了解全部项目事实 |
+| Skill references / 示例 | 仅在当前步骤需要时加载 |
+| 根 README / 通用建议 | 项目地图和背景，不覆盖更具体契约 |
+
+代码、测试、schema、配置和真实运行结果是当前行为事实。文档冲突时要指出并修正最小必要范围。
 
 ## Non-Substitution Rules
 
-- 不用根 `README.md` 替代目录 README；根 README 只提供项目地图。
-- 不用目录 README 替代 `.ai/architecture`；目录 README 不应承载跨项目架构百科。
-- 不用 `.ai/architecture` 替代 `.ai/decisions`；当前状态和历史决策原因要分开。
-- 不用 `.ai/changes` 替代 git diff 或 commit；它记录原因、假设和验证，不记录完整补丁。
-- 不用 readme-first-builder skill 替代目标项目上下文；初始化完成后，目标项目自己的 `AGENTS.md` 和 README 是本地权威。
-- 不用 readme-first-maintainer skill 替代日常任务执行；它只负责文档与记录系统的定期批量维护。
+- 根 README 不替代目录 README。
+- 目录 README 不替代 architecture。
+- architecture 不替代 decisions。
+- changes 不替代 git diff 或稳定 API 文档。
+- Profile 不替代项目代码、权限模型、schema 或测试。
+- Skill 不替代 Profile 的项目本地触发和命令。
+- Scanner 不替代 finding 证据。
+- Builder 不替代目标项目的日常 `AGENTS.md`。
+- Maintainer 不替代普通任务执行或业务代码修复。
+- canonical `extensions/` 不自动成为下游最小系统。
 
 ## Conflict Handling
 
-当文档与实际文件冲突时：
-
-1. 指出冲突位置。
-2. 判断是文档过时、实现偏离，还是任务需要更新长期约定。
-3. 修正当前任务范围内的最小必要文件。
-4. 在 `.ai/changes/` 记录修正原因。
-5. 若冲突暴露长期架构选择，新增或更新 `.ai/decisions/`。
+1. 指出冲突位置和涉及风险领域。
+2. 判断是文档过时、Profile 漂移、Skill 不适配，还是实现偏离。
+3. 以项目事实和更具体规则为优先，做最小必要修正。
+4. changes 记录原因、假设和验证。
+5. 长期选择写 decisions；当前稳定结果同步 architecture / Profile。

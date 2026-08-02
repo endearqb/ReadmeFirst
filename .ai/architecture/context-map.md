@@ -1,63 +1,61 @@
-# README First Context Map
-> 更新于:2026-07-06 · commit 332f388
+# README First Context and Capability Map
 
-> Status: current architecture entry, 2026-07-06.
+> 更新于:2026-08-02
 
-README First 是一套面向 AI 协作开发的项目上下文协议。它的核心不是增加文档数量，而是让每类文档承担稳定、可验证、可维护的职责。
+README First v2.2 是一套面向 AI 协作开发的上下文、风险路由和证据协议。它不追求文档数量，而是让每类文档和 Skill 承担稳定、可验证、可维护的职责。
 
-## Top-Level Context Modules
+## Top-Level Modules
 
-| 模块 | 职责 | 主要接口 | 验证方式 |
+| 模块 | 职责 | 主要接口 | 验证 |
 |---|---|---|---|
-| `AGENTS.md` | 全局 Agent 行为协议 | 读取顺序、不确定性压缩、增删改查规则、记录规则 | 人工审阅、与 README 和 `.ai/architecture` 交叉检查 |
-| `README.md` | 项目地图和原则说明 | 系统组成、核心原则、落地路线、skill 入口 | 链接和路径检查 |
-| 目录级 `README.md` | 局部上下文契约 | 目录职责、核心文件、依赖边界、验证方式 | 与当前目录结构和代码事实比对 |
-| `.ai/architecture/` | 当前稳定架构知识层 | 模块地图、依赖边界、文档契约、当前状态 | `git diff --check` 与路径引用检查 |
-| `.ai/changes/` | 单次变更记录;积累到一定阈值后由 maintainer 压缩归档 | 变更原因、范围、假设、验证和后续注意事项 | 文件名日期、记录内容完整性、分级标签 |
-| `.ai/decisions/` | 长期决策记录 | 背景、决策、影响和后续约束 | 与当前架构文件一致性检查 |
-| `skills/readme-first-builder/` | 可复用初始化/升级能力(v2.1 离线优先、P0 渐进覆盖) | `skills/readme-first-builder/SKILL.md`、references/ 模板、agent metadata | 与根协议和 README 同步检查 |
-| `skills/readme-first-maintainer/` | 可复用定期维护能力(巡检/压缩/沉淀/校准) | `skills/readme-first-maintainer/SKILL.md`、scripts/ | 与 changes 分布和架构同步检查 |
-| `VERSION` | 协议版本号 | 版本数值、迁移文件索引 | 与 canonical 版本一致 |
-| `migrations/` | 下游升级操作清单 | v1/v2 历史升级细节 | 协议 MINOR/PATCH 升级时 |
-| `.ai/glossary.md` | 共享术语表(按需启用) | 术语、定义、别名 | 术语与代码命名一致 |
-| `.ai/handoff.md` | 会话交接(按需启用) | 目标、状态、下一步、假设 | 跨会话任务连续性 |
-| `.ai/plans/` | L2 计划(按需启用) | checkbox 任务、验证命令 | 计划执行与归档 |
+| `AGENTS.md` | 全局行为协议 | L0/L1/L2、读取、不确定性、风险路由、记录 | 与模板和 VERSION 同步 |
+| 根 `README.md` | 项目地图和原则 | 系统组成、流程、能力包入口 | 路径与内容审阅 |
+| 目录 README | 局部上下文契约 | 职责、边界、核心文件、验证 | 与目录事实比对 |
+| `.ai/architecture/` | 当前稳定架构 | 模块地图、边界、Profile/Skill 架构 | repository validator |
+| `.ai/profiles/` | 目标项目本地风险路由 | 触发、风险领域、不变量、证据、Skill 绑定 | `check-profiles.py` |
+| 项目 `skills/` | 专业执行工作流 | SKILL、references、scripts、examples | Skill frontmatter 与项目测试 |
+| `.ai/changes/` | 单次变更证据 | 原因、风险、假设、结果 | 模板字段和证据抽查 |
+| `.ai/decisions/` | 长期选择原因 | 背景、决策、影响、非目标 | 与当前架构一致 |
+| canonical `extensions/` | 可选能力包发布 | PROFILE + Skill | repository validator |
+| Builder | 初始化、升级、候选发现 | 模板、热点扫描、可选安装 | fixtures + sync check |
+| Maintainer | 巡检、压缩、沉淀、校准 | scripts + maintenance workflow | fixtures + reports |
+| `VERSION` / `migrations/` | 协议演进 | 版本印记与升级清单 | migration chain |
 
-## Context Flow
+## Context and Capability Flow
 
 ```mermaid
 flowchart TD
-  User["User Prompt"] --> Agents["AGENTS.md"]
-  Agents --> RootReadme["Root README.md"]
-  RootReadme --> DirReadme["Directory README.md"]
-  RootReadme --> Architecture[".ai/architecture"]
-  DirReadme --> Target["Target files and tests"]
-  Architecture --> Target
-  Decisions[".ai/decisions"] --> Architecture
-  Changes[".ai/changes"] --> Architecture
-  Builder["skills/readme-first-builder"] --> Agents
-  Builder --> RootReadme
-  Builder --> Architecture
-  Builder --> Glossary[".ai/glossary.md"]
-  Builder --> Handoff[".ai/handoff.md"]
-  Builder --> Plans[".ai/plans/"]
-  Maintainer["skills/readme-first-maintainer"] --> Changes
-  Maintainer --> Architecture
-  Maintainer --> Decisions
-  Maintainer --> Glossary
-  Maintainer --> Handoff
-  Maintainer --> Plans
-  Handoff --> Agents
-  Glossary --> Agents
-  Plans --> Agents
+  User["User task"] --> Agents["AGENTS.md"]
+  Agents --> Level["L0 / L1 / L2"]
+  Agents --> Root["Root README"]
+  Root --> Dir["Directory README"]
+  Root --> Arch[".ai/architecture"]
+  Dir --> Facts["Code / tests / schema / config"]
+  Arch --> Facts
+  Facts --> Domains["Risk domains"]
+  Domains --> Profiles[".ai/profiles"]
+  Profiles --> Skills["Installed skills"]
+  Skills --> Refs["Needed references / scripts"]
+  Refs --> Evidence["Risk-specific evidence"]
+  Evidence --> Changes[".ai/changes"]
+  Changes --> Maintainer["Maintainer"]
+  Maintainer --> Arch
+  Maintainer --> Profiles
+  Maintainer --> Decisions[".ai/decisions"]
+  Extensions["canonical extensions"] --> Profiles
+  Extensions --> Skills
+  Builder["Builder"] --> Agents
+  Builder --> Root
+  Builder --> Arch
+  Builder -. optional .-> Profiles
+  Builder -. optional .-> Skills
 ```
 
 ## Boundary Notes
 
-- `AGENTS.md` 是行为协议入口；它可以引用 `.ai/architecture`，但具体架构说明不应塞回 `AGENTS.md`。
-- 根 `README.md` 面向人类和 Agent 解释系统组成；它应指向 `.ai/architecture`，但不承载所有架构细节。
-- 目录级 README 只描述对应目录的当前稳定契约；跨目录通用规则应上移到根 README 或 `.ai/architecture`。
-- `.ai/changes/` 记录“这次为什么改”；`.ai/architecture/` 记录“现在系统是什么样”；`.ai/decisions/` 记录“为什么长期选择这样”。
-- readme-first-builder skill 是对外复制协议的工具，必须跟随 canonical source 更新，但不应替代目标项目自己的 `AGENTS.md`。
-- readme-first-maintainer skill 承接日常任务卸下的系统性维护负担，不替代普通任务执行，也不替代目标项目自己的 `AGENTS.md`。
-- `.ai/glossary.md`、`.ai/handoff.md`、`.ai/plans/` 是触发式标准扩展，不命中条件时为空或不存在，不影响最小系统。
+- 任务级别管理流程重量，风险领域管理专业能力；二者不能互相替代。
+- Profile 是项目本地路由契约；Skill 是跨项目复用工作流。
+- `extensions/` 是 canonical 发布目录，不属于所有下游项目的最小系统。
+- Scanner 只产生候选线索；finding 必须回到项目事实和运行证据。
+- 培训手册只在 Mentor 或明确培训任务中加载。
+- changes 记录“这次为什么、风险和证据”；architecture 记录“现在是什么”；decisions 记录“为什么长期这样选”。
